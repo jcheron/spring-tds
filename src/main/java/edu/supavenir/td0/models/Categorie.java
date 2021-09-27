@@ -12,6 +12,11 @@ public class Categorie {
 		items = new ArrayList<Element>();
 	}
 
+	public Element getElementByName(String nom) {
+		int index = items.indexOf(new Element(nom));
+		return items.get(index);
+	}
+
 	public String getNom() {
 		return nom;
 	}
@@ -28,4 +33,25 @@ public class Categorie {
 		this.items = items;
 	}
 
+	public boolean addItem(Element elm) {
+		if (!items.contains(elm)) {
+			return items.add(elm);
+		}
+		return false;
+	}
+
+	public boolean deleteItem(Element elm) {
+		if (items.contains(elm)) {
+			return items.remove(elm);
+		}
+		return false;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (!(obj instanceof Categorie)) {
+			return false;
+		}
+		return ((Categorie) obj).getNom().equals(this.nom);
+	}
 }
