@@ -1,13 +1,13 @@
-package edu.supavenir.td0;
+package edu.supavenir.ormtest;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class Td0Application {
+public class OrmTestApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(Td0Application.class, args);
+		SpringApplication.run(OrmTestApplication.class, args);
 	}
 
 }

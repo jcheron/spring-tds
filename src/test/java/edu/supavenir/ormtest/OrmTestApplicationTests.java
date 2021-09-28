@@ -1,10 +1,10 @@
-package edu.supavenir.td0;
+package edu.supavenir.ormtest;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class Td0ApplicationTests {
+class OrmTestApplicationTests {
 
 	@Test
 	void contextLoads() {
