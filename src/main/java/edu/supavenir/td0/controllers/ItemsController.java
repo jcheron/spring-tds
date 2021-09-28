@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,6 +24,7 @@ import edu.supavenir.td0.technics.CssMessage;
 
 @Controller
 @SessionAttributes("categories")
+@Scope("session")
 public class ItemsController {
 
 	private Categorie getCategorieByName(String nom, List<Categorie> categories) {
@@ -34,11 +38,14 @@ public class ItemsController {
 	}
 
 	@GetMapping("/")
-	public String itemsAction(Model model, @ModelAttribute String categorie) {
-		if (categorie != null) {
+	public String itemsAction(HttpServletRequest request, Model model,
+			@SessionAttribute(required = false) List<Categorie> categories) {
+		if (!model.asMap().containsKey("categorie")) {
+			String categorie = "Amis";
+			if (categories != null) {
+				categorie = categories.get(0).getNom();
+			}
 			model.addAttribute("categorie", categorie);
-		} else {
-			model.addAttribute("categorie", "Amis");
 		}
 		return "items";
 	}
@@ -63,15 +70,19 @@ public class ItemsController {
 
 	@GetMapping("/items/inc/{categorie}/{nom}")
 	public RedirectView incAction(@PathVariable String nom, @PathVariable String categorie,
-			@SessionAttribute List<Categorie> categories) {
+			@SessionAttribute List<Categorie> categories, RedirectAttributes attrs) {
 		getCategorieByName(categorie, categories).getElementByName(nom).inc();
+		attrs.addFlashAttribute("categorie", categorie);
+
 		return new RedirectView("/");
 	}
 
 	@GetMapping("/items/dec/{categorie}/{nom}")
 	public RedirectView decAction(@PathVariable String nom, @PathVariable String categorie,
-			@SessionAttribute List<Categorie> categories) {
-		getCategorieByName(categorie, categories).getElementByName(nom).inc();
+			@SessionAttribute List<Categorie> categories, RedirectAttributes attrs) {
+		getCategorieByName(categorie, categories).getElementByName(nom).dec();
+		attrs.addFlashAttribute("categorie", categorie);
+
 		return new RedirectView("/");
 	}
 
@@ -80,6 +91,7 @@ public class ItemsController {
 			@SessionAttribute List<Categorie> categories, RedirectAttributes attrs) {
 		getCategorieByName(categorie, categories).deleteItem(new Element(nom));
 		attrs.addFlashAttribute("msg", CssMessage.SuccessMessage("L'Element <b>" + nom + "</b> a été supprimé."));
+		attrs.addFlashAttribute("categorie", categorie);
 		return new RedirectView("/");
 	}
 }
